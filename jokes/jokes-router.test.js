@@ -28,13 +28,8 @@ describe('Jokes router', () => {
             };
 
             // create user
-            await request(server)
-                .post('/api/auth/register')
-                .send(user);
-            
-            // get token
             const res = await request(server)
-                .post('/api/auth/login')
+                .post('/api/auth/register')
                 .send(user);
 
             const { token } = res.body;
