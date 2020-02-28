@@ -33,8 +33,29 @@ router.post('/register', async (req, res) => {
 
 });
 
-router.post('/login', (req, res) => {
-  
+router.post('/login', async (req, res) => {
+  const user = req.body;
+  // check that user is valid
+  if(!user.username || !user.password) {
+    res.status(400).json({ error: 'Username and password are required' });
+    return;
+  }
+
+  // get user by username
+  const userWithThisUsername = await Users.getByUsername(user.username);
+
+  if(userWithThisUsername && bcrypt.compareSync(user.password, userWithThisUsername.password)) {
+    // credentials are valid, respond with token
+    const jwt = createJwt(userWithThisUsername);
+
+    res.status(200).json({
+      message: 'Success',
+      token: jwt
+    });
+  }
+  else {
+    res.status(401).json({ error: 'Invalid credentials' });
+  }
 });
 
 

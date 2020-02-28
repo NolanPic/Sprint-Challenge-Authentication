@@ -32,4 +32,39 @@ describe('Users router', () => {
             expect(res.body.token).toBeDefined();
         });
     });
+
+    describe('POST /api/auth/login', () => {
+        test('responds with 200', async () => {
+            const user = {
+                username: 'Jared',
+                password: 'thisisaREALLYGoodPwD'
+            };
+            await request(server)
+                .post('/api/auth/register')
+                .send(user);
+            
+            const res = await request(server)
+                .post('/api/auth/login')
+                .send(user);
+            
+            expect(res.status).toBe(200);
+        });
+
+        test('responds with token', async () => {
+            const user = {
+                username: 'Jared',
+                password: 'thisisaREALLYGoodPwD'
+            };
+            await request(server)
+                .post('/api/auth/register')
+                .send(user);
+            
+            const res = await request(server)
+                .post('/api/auth/login')
+                .send(user);
+            
+            expect(res.type).toMatch(/json/i);
+            expect(res.body.token).toBeDefined();
+        });
+    })
 });
